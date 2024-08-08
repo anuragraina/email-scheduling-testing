@@ -2,7 +2,6 @@
 const express = require('express');
 const cron = require('node-cron');
 const nodemailer = require('nodemailer');
-//const fetch = require('node-fetch');
 
 require('dotenv').config();
 
@@ -10,6 +9,8 @@ const app = express();
 
 const USER_EMAIL = process.env.USER_EMAIL;
 const USER_PASS = process.env.USER_PASS;
+const DEPLOY_URL = process.env.DEPLOY_URL;
+const ALIVE_MINUTES = process.env.ALIVE_MINUTES;
 
 // Create a transporter object using the default SMTP transport
 const transporter = nodemailer.createTransport({
@@ -52,7 +53,7 @@ app.get('/keep-alive', (req, res) => {
 
 // Set up a basic route
 app.get('/', (req, res) => {
-	res.send('Email scheduling server is running.');
+	res.status(200).send('Email scheduling server is running.');
 });
 
 // Start the Express server
@@ -62,9 +63,9 @@ app.listen(port, () => {
 });
 
 //Ping the keep-alive endpoint periodically to keep the server active
-// setInterval(() => {
-// 	fetch(`http://localhost:${port}/keep-alive`)
-// 		.then((res) => res.text())
-// 		.then((body) => console.log(body))
-// 		.catch((err) => console.error(err));
-// }, 5 * 60 * 1000); // Ping every 5 minutes
+setInterval(() => {
+	fetch(`${DEPLOY_URL}/keep-alive`)
+		.then((res) => res.text())
+		.then((body) => console.log(body))
+		.catch((err) => console.error(err));
+}, parseFloat(ALIVE_MINUTES) * 60 * 1000); // Ping every 5 minutes
