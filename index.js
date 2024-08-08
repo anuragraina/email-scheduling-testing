@@ -39,13 +39,14 @@ const sendEmail = () => {
 };
 
 // Schedule the email to be sent every Monday at 12 PM
-cron.schedule('*/10 * * * *', () => {
+cron.schedule('*/5 * * * *', () => {
 	console.log('Sending weekly reminder email...');
 	sendEmail();
 });
 
 // Set up a keep-alive endpoint
 app.get('/keep-alive', (req, res) => {
+	console.log('Server is still active at:', new Date());
 	res.send('Keeping the server alive');
 });
 
@@ -57,11 +58,7 @@ app.get('/', (req, res) => {
 // Start the Express server
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-	console.log(`Server is running on http://localhost:${port}`);
-
-	setInterval(() => {
-		console.log('Server is still active at:', new Date());
-	}, 5 * 60 * 1000); // Log every 5 minutes
+	console.log(`Server is running on PORT: ${port}`);
 });
 
 //Ping the keep-alive endpoint periodically to keep the server active
