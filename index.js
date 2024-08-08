@@ -39,7 +39,7 @@ const sendEmail = () => {
 };
 
 // Schedule the email to be sent every Monday at 12 PM
-cron.schedule('*/1 * * * *', () => {
+cron.schedule('*/2 * * * *', () => {
 	console.log('Sending weekly reminder email...');
 	sendEmail();
 });
